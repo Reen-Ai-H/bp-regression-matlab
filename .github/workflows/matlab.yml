@@ -1,0 +1,25 @@
+name: Reproducible BP regression
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: matlab-actions/setup-matlab@v2
+        with:
+          release: R2025b
+          products: Deep_Learning_Toolbox
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: run_bp_assignment
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bp-results
+          path: results/
+          if-no-files-found: error
